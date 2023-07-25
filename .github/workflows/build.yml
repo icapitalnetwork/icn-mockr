@@ -49,7 +49,6 @@ jobs:
           context: ./
           file: ./Dockerfile
           builder: ${{ steps.buildx.outputs.name }}
-          target: builder
           push: false
           load: true
           tags: icn-mockr_app:latest

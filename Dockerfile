@@ -1,7 +1,6 @@
 ARG RUBY_VERSION=3.2.2
 
 FROM ruby:$RUBY_VERSION
-LABEL maintainer="Ricardo Bucho <ricardobucho@live.com>"
 
 # Set the working directory
 WORKDIR /app

@@ -6,7 +6,6 @@ on:
 
 name: Notify Fresh Service
 
-
 jobs:
   notify-fs:
     name: Notify Fresh Service

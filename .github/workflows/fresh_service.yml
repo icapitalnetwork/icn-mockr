@@ -1,0 +1,38 @@
+# fresh_service.yml
+
+on:
+  pull_request:
+    types: [opened]
+
+name: Notify Fresh Service
+
+jobs:
+  notify-fs:
+    name: Notify Fresh Service
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Out Repo
+        uses: actions/checkout@v3
+      - name: Get branch on commit
+        id: get_branch
+        run:
+          echo "branch_name=$(if [[ "ref-${{ github.base_ref }}" == *"deploy"* ]]; then echo ${{ github.head_ref }} | awk -F '/' '{print $1 $2}' ; else echo ${{ github.ref }} | awk -F '/' '{print $3 $4}'; fi)" >> $GITHUB_OUTPUT
+      - name: Notify Fresh Service
+        id: notify-fs
+        env:
+          PR_TITLE: "${{ github.event.pull_request.title }}"
+          PR_URL: "${{ github.event.pull_request.html_url }}"
+          PR_BODY: "${{ github.event.pull_request.body }}"
+        run: |
+             clean_pr_body=$(echo $PR_BODY | sed -r -e 's#([^\])"#\1#g')
+             echo "{
+               \"description\": \"<p>See $PR_URL </p><br>$clean_pr_body</br>\",
+               \"subject\": \"$PR_TITLE\",
+               \"email\": \"github-actions-no-reply@icapitalnetwork.com\",
+               \"change_type\": 1,
+               \"status\": 1,
+               \"priority\": 1,
+               \"impact\": 1,
+               \"risk\": 1
+             }" > temp.file
+             curl -v -u ${{ secrets.FRESH_SERVICE_API_KEY }} -H "Content-Type: application/json" -d @temp.file  https://icn.freshservice.com//api/v2/changes

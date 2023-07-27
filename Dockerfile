@@ -46,7 +46,6 @@ RUN bundle install --jobs 8 --retry 5
 
 # Install node modules and precompile assets
 RUN /bin/bash -c "source $NVM_DIR/nvm.sh && yarn install --check-files"
-RUN /bin/bash -c "source $NVM_DIR/nvm.sh && bundle exec rails assets:precompile"
 
 # Set the entrypoint
 COPY ./bin/builds/docker.sh ./bin/builds/docker.sh

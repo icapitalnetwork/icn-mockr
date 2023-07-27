@@ -11,8 +11,7 @@ RUN apt-get update -qq \
     build-essential \
     curl \
     libpq-dev \
-    postgresql \
-    yarn
+    postgresql
 
 # Install Node.js using NVM
 COPY .nvmrc ./
@@ -31,7 +30,7 @@ RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | b
   && nvm use default"
 
 # # Install Yarn
-# RUN /bin/bash -c "source $NVM_DIR/nvm.sh && npm install -g yarn"
+RUN /bin/bash -c "source $NVM_DIR/nvm.sh && npm install -g yarn"
 
 # Clean up
 RUN apt-get clean \

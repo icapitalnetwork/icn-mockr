@@ -29,7 +29,7 @@ RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | b
   && nvm alias default $NODE_VERSION \
   && nvm use default"
 
-# # Install Yarn
+# Install Yarn
 RUN /bin/bash -c "source $NVM_DIR/nvm.sh && npm install -g yarn"
 
 # Clean up
@@ -45,8 +45,7 @@ RUN bundle config --global frozen 1
 RUN bundle install --jobs 8 --retry 5
 
 # Install node modules and precompile assets
-RUN yarn install --check-files
-#RUN /bin/bash -c "source $NVM_DIR/nvm.sh && yarn install --check-files"
+RUN /bin/bash -c "source $NVM_DIR/nvm.sh && yarn install --check-files"
 #RUN /bin/bash -c "source $NVM_DIR/nvm.sh && bundle exec rails assets:precompile"
 
 # Set the entrypoint

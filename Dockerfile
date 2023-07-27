@@ -11,7 +11,8 @@ RUN apt-get update -qq \
     build-essential \
     curl \
     libpq-dev \
-    postgresql
+    postgresql \
+    yarn
 
 # Install Node.js using NVM
 COPY .nvmrc ./
@@ -29,8 +30,8 @@ RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | b
   && nvm alias default $NODE_VERSION \
   && nvm use default"
 
-# Install Yarn
-RUN /bin/bash -c "source $NVM_DIR/nvm.sh && npm install -g yarn"
+# # Install Yarn
+# RUN /bin/bash -c "source $NVM_DIR/nvm.sh && npm install -g yarn"
 
 # Clean up
 RUN apt-get clean \
@@ -45,8 +46,9 @@ RUN bundle config --global frozen 1
 RUN bundle install --jobs 8 --retry 5
 
 # Install node modules and precompile assets
-RUN /bin/bash -c "source $NVM_DIR/nvm.sh && yarn install --check-files"
-RUN /bin/bash -c "source $NVM_DIR/nvm.sh && bundle exec rails assets:precompile"
+RUN yarn install --check-files
+#RUN /bin/bash -c "source $NVM_DIR/nvm.sh && yarn install --check-files"
+#RUN /bin/bash -c "source $NVM_DIR/nvm.sh && bundle exec rails assets:precompile"
 
 # Set the entrypoint
 COPY ./bin/builds/docker.sh ./bin/builds/docker.sh

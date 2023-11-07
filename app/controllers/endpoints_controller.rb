@@ -80,6 +80,7 @@ class EndpointsController < ActionController::Base
       user,
       request,
       client_request,
+      client_index,
       client_response,
     ).call
   end
@@ -87,20 +88,17 @@ class EndpointsController < ActionController::Base
   def respond_with_index
     return if client_index.blank?
 
+    create_request_log
+
     sleep(client_index.throttle / 1000)
 
     render(
       json:
-        client_request.responses.select do |client_response|
-          client_response.format == Response.formats.key("json") &&
-            JSON.parse(client_response.body).any? do |(_, value)|
-              value.downcase.include?(params[:q]&.downcase || "")
-            end
-        end.flat_map do |response|
-          client_index.properties.map do |key, value|
-            { key => JSON.parse(response.body)[value] }
-          end
-        end,
+        EndpointResponses::Index.new(
+          request: client_request,
+          index: client_index,
+          params:,
+        ).call,
       status: :ok,
     )
   end

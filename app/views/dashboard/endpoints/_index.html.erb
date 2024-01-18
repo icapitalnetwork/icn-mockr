@@ -31,7 +31,7 @@
           <%= request.method %>
         </span>
         <span class="fst-italic align-middle">
-          /<%= client.slug %><%= index.path %>
+          /<%= client.slug %><%= index.path unless index.path == "/" %>
         </span>
       </li>
     </ul>
